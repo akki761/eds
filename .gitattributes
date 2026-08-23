@@ -1,0 +1,25 @@
+# Enforce LF line endings for all text files (project standard, see AGENTS.md).
+# Prevents Windows checkouts (core.autocrlf) from introducing CRLF that fails ESLint.
+* text=auto eol=lf
+
+*.js   text eol=lf
+*.mjs  text eol=lf
+*.css  text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.svg  text eol=lf
+
+# Binary assets: leave untouched.
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary

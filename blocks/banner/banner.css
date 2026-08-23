@@ -19,7 +19,7 @@
 
 /* COLUMN 1: Optional Background Color Over Image */
 .banner-overlay {
-  background-color: rgba(26, 42, 58, 0.85); /* Change this to your preferred color/opacity */
+  background-color: rgb(26 42 58 / 85%); /* Change this to your preferred color/opacity */
   width: 100%;
   height: 100%;
 }
@@ -30,13 +30,13 @@
   align-items: center; /* Centers text vertically */
   justify-content: center; /* Centers text horizontally */
   padding: 40px;
-  background-color: rgba(255, 255, 255, 0.1); /* Optional: subtle tint behind text for readability */
+  background-color: rgb(255 255 255 / 10%); /* Optional: subtle tint behind text for readability */
   backdrop-filter: blur(5px); /* Optional: blurs the background image slightly behind text */
 }
 
 /* Typography */
 .banner-title {
-  color: #ffffff;
+  color: #fff;
   font-size: 3rem;
   font-weight: 700;
   margin: 0;
@@ -47,7 +47,7 @@
 }
 
 /* Responsive Grid Stack for Mobile */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .banner {
     grid-template-columns: 1fr; /* Stacks columns into one column */
     grid-template-rows: 200px auto; /* 200px for color block, auto for text */
