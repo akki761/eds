@@ -1,0 +1,371 @@
+.photo-gallery {
+    padding: 20px;
+}
+
+/* Photo grid styles */
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+
+    .hover-circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        background: url('/media/icons/more.png') center / cover;
+        display: inline-block;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.3s ease;
+        pointer-events: none;
+    }
+
+    .photo-item {
+        position: relative;
+        aspect-ratio: 4/3;
+        cursor: pointer;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        &:hover img {
+            transform: scale(1.05);
+        }
+
+        &:hover .hover-circle {
+            transform: translate(-50%, -50%) scale(2);
+        }
+    }
+}
+
+/* Modal styles */
+.image-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 90%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+    .image-modal-content {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 90vw;
+        transform: scale(1);
+        transition: transform 0.3s ease;
+
+        .modal-main {
+            flex: 1;
+            max-width: 80vw;
+            position: relative;
+
+            .image-container {
+                position: relative;
+                width: 100%;
+                cursor: pointer;
+
+                img {
+                    width: 100%;
+                    max-height: calc(70vh - 100px);
+                    object-fit: contain;
+                }
+
+                &::before,
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    height: 100%;
+                    width: 50%;
+                    z-index: 1;
+                    cursor: pointer;
+                }
+
+                &::before {
+                    left: 0;
+                }
+
+                &::after {
+                    right: 0;
+                }
+
+                .nav-button {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: transparent;
+                    opacity: 0;
+                    border: none;
+                    cursor: pointer;
+                    padding: 0;
+                    width: 24px;
+                    height: 24px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: opacity 0.3s ease;
+                    z-index: 2;
+
+                    &.prev {
+                        left: 0;
+                        background: url("/media/icons/sprite-prev.png") center no-repeat;
+                    }
+
+                    &.next {
+                        right: 0;
+                        background: url("/media/icons/sprite-next.png") center no-repeat;
+                    }
+                }
+
+                /* Show nav buttons only when hovering over the image container */
+                &:hover .nav-button {
+                    opacity: 0.8;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+
+                .expand-button {
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    width: 28px;
+                    height: 28px;
+                    background: url('/media/icons/sprite.png') 17px -31px no-repeat;
+                    cursor: pointer;
+                    opacity: 0;
+                    transition: opacity 0.3s ease, transform 0.3s ease;
+                    z-index: 3;
+
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+
+                    &.contracted {
+                        background-position: 17px -85px;
+                    }
+                }
+
+                &:hover .expand-button {
+                    opacity: 0.8;
+                }
+            }
+
+            .thumbnails-container {
+                position: absolute;
+                bottom: 75px;
+                left: 0;
+                right: 0;
+                display: flex;
+                gap: 10px;
+                padding: 10px 40px;
+                background: none;
+                overflow: hidden;
+                justify-content: center;
+                height: 60px;
+                z-index: 2;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+
+                .thumb-nav {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: url("/media/icons/sprite.png") no-repeat;
+                    border: none;
+                    cursor: pointer;
+                    padding: 5px;
+                    z-index: 2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px;
+                    height: 20px;
+
+                    &.prev {
+                        left: 5px;
+                        background-position: -31px -3px;
+                    }
+
+                    &.next {
+                        right: 5px;
+                        background-position: -82px -3px;
+                    }
+                }
+
+                .thumbnails-wrapper {
+                    display: flex;
+                    gap: 10px;
+                    overflow-x: auto;
+                    max-width: 100%;
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+
+                    .thumbnail {
+                        width: 60px;
+                        height: 40px;
+                        cursor: pointer;
+                        border: 2px solid transparent;
+                        transition: all 0.3s ease;
+                        flex-shrink: 0;
+
+                        &:hover {
+                            border-color: rgb(255 255 255 / 50%);
+                        }
+
+                        &.active {
+                            border-color: white;
+                        }
+
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    }
+                }
+            }
+
+            .modal-controls {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 0;
+
+                    .slideshow-controls {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                        .play-button,
+                        .slide-nav {
+                            border: none;
+                            color: transparent;
+                            cursor: pointer;
+                            padding: 0;
+                            background: url("/media/icons/sprite.png") no-repeat;
+                            opacity: 0.8;
+                            transition: opacity 0.3s ease;
+
+                            &:hover {
+                                opacity: 1;
+                            }
+                        }
+
+                        /* stylelint-disable no-descending-specificity */
+                        .play-button {
+                            height: 30px;
+                            width: 30px;
+                            background-position: -51px 1px;
+
+
+                            &.playing {
+                                background-position: -51px -29px;
+                            }
+                        }
+
+                        .slide-nav {
+                            height: 20px;
+                            width: 20px;
+
+                            &.prev {
+                                background-position: -31px -3px;
+                            }
+
+                            &.next {
+                                background-position: -82px -3px;
+                            }
+                        }
+                }
+
+                .image-counter {
+                    font-style: italic;
+                    color: #999;
+                    font-size: var(--body-font-size-xs);
+                }
+
+                .modal-title {
+                    flex: 1;
+                    text-align: center;
+                    font-size: var(--body-font-size-xs);
+                    font-weight: 700;
+                    color: #333;
+                    margin: 0 20px;
+                }
+
+                .close-button {
+                    background: url("/media/icons/sprite.png") 2px 1px no-repeat;
+                    color: transparent;
+                    height: 30px;
+                    width: 30px;
+                    padding: 0;
+                    border: none;
+                    opacity: 0.8;
+                    cursor: pointer;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.image-modal-content:hover .modal-main .thumbnails-container {
+    opacity: 1 !important;  /* Using !important to ensure it overrides any other opacity settings */
+}
+
+.thumbnails-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.modal-controls>* {
+    margin: 0 10px;
+}
+
+.image-modal-content.expanded {
+    padding: 10px;
+    max-width: 95vw;
+    transform: scale(1.25);
+    transition: transform 0.3s ease;
+    background: white;
+
+    .modal-main.expanded {
+        max-width: 100%;
+        margin: 0 auto;
+
+        .image-container {
+            img {
+                max-height: calc(80vh - 100px);
+            }
+        }
+
+        .thumbnails-container,
+        .modal-controls {
+            display: flex;
+        }
+    }
+}
+
+@media (width <= 600px) {
+    .thumbnails-container {
+        display: none !important;
+    }
+
+    .modal-title {
+        font-size: 10px !important;
+    }
+}

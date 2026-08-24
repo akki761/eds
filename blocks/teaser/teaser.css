@@ -1,0 +1,73 @@
+/* Teaser block: an image paired with a heading, description and CTA.
+   Stacked on mobile, side-by-side on wider screens. */
+
+.teaser {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: var(--light-color);
+}
+
+.teaser .teaser-image {
+    line-height: 0;
+}
+
+.teaser .teaser-image img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.teaser .teaser-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+}
+
+.teaser .teaser-content > * {
+    margin: 0 0 12px;
+}
+
+.teaser .teaser-content > *:last-child {
+    margin-bottom: 0;
+}
+
+.teaser .teaser-content h1,
+.teaser .teaser-content h2,
+.teaser .teaser-content h3 {
+    line-height: 1.15;
+}
+
+@media (width >= 600px) {
+    .teaser {
+        flex-direction: row;
+        min-height: 340px;
+    }
+
+    .teaser .teaser-image,
+    .teaser .teaser-content {
+        flex: 1 1 50%;
+    }
+
+    .teaser .teaser-image img {
+        height: 100%;
+        aspect-ratio: auto;
+    }
+
+    .teaser .teaser-content {
+        align-items: flex-start;
+        padding: 40px;
+        text-align: left;
+    }
+}
+
+/* Variant: put the image on the right (author with "teaser (image-right)") */
+@media (width >= 600px) {
+    .teaser.image-right {
+        flex-direction: row-reverse;
+    }
+}

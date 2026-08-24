@@ -1,64 +1,79 @@
-/* Banner Grid Container */
+/* Banner / hero block
+   Works with the DOM produced by banner.js:
+   .banner > div > div > (p > picture, h1.banner-title) */
+
 .banner {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
-  width: 100%;
-  height: 450px; /* Adjust banner height here */
-  background-color: blue;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    min-height: 280px;
+    margin: 24px 0;
+    overflow: hidden;
+    border-radius: 12px;
+    color: #fff;
 }
 
-.banner.dark {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
-  width: 100%;
-  height: 450px; /* Adjust banner height here */
-  background-color: black;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* the image becomes the full-bleed hero background */
+.banner p {
+    margin: 0;
 }
 
-/* COLUMN 1: Optional Background Color Over Image */
-.banner-overlay {
-  background-color: rgb(26 42 58 / 85%); /* Change this to your preferred color/opacity */
-  width: 100%;
-  height: 100%;
+.banner picture {
+    position: absolute;
+    inset: 0;
 }
 
-/* COLUMN 2: Text Layer over Image */
-.banner-content {
-  display: flex;
-  align-items: center; /* Centers text vertically */
-  justify-content: center; /* Centers text horizontally */
-  padding: 40px;
-  background-color: rgb(255 255 255 / 10%); /* Optional: subtle tint behind text for readability */
-  backdrop-filter: blur(5px); /* Optional: blurs the background image slightly behind text */
+.banner picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
 }
 
-/* Typography */
-.banner-title {
-  color: #fff;
-  font-size: 3rem;
-  font-weight: 700;
-  margin: 0;
-  text-align: center;
-  line-height: 1.2;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.banner:hover picture img {
+    transform: scale(1.05);
 }
 
-/* Responsive Grid Stack for Mobile */
-@media (width <= 768px) {
-  .banner {
-    grid-template-columns: 1fr; /* Stacks columns into one column */
-    grid-template-rows: 200px auto; /* 200px for color block, auto for text */
-    height: auto;
-  }
-  
-  .banner-content {
-    padding: 40px 20px;
-  }
+/* gradient for legible text over any image */
+.banner::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(to top, rgb(0 0 0 / 75%) 0%, rgb(0 0 0 / 15%) 55%, rgb(0 0 0 / 0%) 100%);
+}
 
-  .banner-title {
-    font-size: 2.2rem;
-  }
+/* title overlays the image, anchored bottom-left */
+.banner .banner-title {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 1;
+    margin: 0;
+    padding: 24px;
+    font-size: clamp(1.75rem, 6vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 12px rgb(0 0 0 / 45%);
+}
+
+/* Dark variant: full overlay with a centered title */
+.banner.dark::after {
+    background: linear-gradient(to top, rgb(0 0 0 / 85%) 0%, rgb(0 0 0 / 55%) 100%);
+}
+
+.banner.dark .banner-title {
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+@media (width >= 600px) {
+    .banner {
+        min-height: 440px;
+    }
+
+    .banner .banner-title {
+        padding: 40px;
+    }
 }
