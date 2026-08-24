@@ -74,6 +74,21 @@ function buildWidgetAutoBlocks(main) {
 }
 
 /**
+ * Auto-blocks a breadcrumb at the top of the main element.
+ * Runs only for the real page main (not fragments/header/footer) and skips the homepage.
+ * @param {Element} main The container element
+ */
+function buildBreadcrumb(main) {
+  // fragments/header/footer decorate a detached main, so this guard skips them
+  if (main !== document.querySelector('main')) return;
+  // no breadcrumb on the homepage
+  if (window.location.pathname === '/') return;
+  const section = document.createElement('div');
+  section.append(buildBlock('breadcrumb', { elems: [] }));
+  main.prepend(section);
+}
+
+/**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
@@ -97,6 +112,7 @@ function buildAutoBlocks(main) {
       });
     }
     buildWidgetAutoBlocks(main);
+    buildBreadcrumb(main);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);

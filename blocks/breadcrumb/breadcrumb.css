@@ -1,0 +1,39 @@
+.breadcrumb nav ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+}
+
+.breadcrumb li {
+    display: inline-block;
+    padding: 10px 5px;
+    text-transform: uppercase;
+}
+
+.breadcrumb li:first-child {
+    padding-left: 0;
+}
+
+.breadcrumb li a {
+    color: #202020;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.breadcrumb li a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb li[aria-current="page"] {
+    color: #606060;
+    font-weight: 600;
+}
+
+.breadcrumb li:not(:first-child)::before {
+    padding-right: 5px;
+    font-size: 14px;
+    line-height: 1;
+    color: #ffea00;
+    content: "\25B6"; /* ▶ */
+}
