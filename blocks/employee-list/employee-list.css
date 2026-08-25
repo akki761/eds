@@ -1,0 +1,51 @@
+.employee-list .employee-list-table {
+    overflow-x: auto;
+}
+
+.employee-list table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--body-font-size-s);
+}
+
+.employee-list th,
+.employee-list td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.employee-list thead th {
+    background-color: var(--light-color);
+    font-size: var(--body-font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.employee-list tbody tr:hover {
+    background-color: var(--light-color);
+}
+
+.employee-list .employee-list-more {
+    display: block;
+    margin: 24px auto 0;
+    padding: 10px 28px;
+    font-family: inherit;
+    font-size: var(--body-font-size-s);
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--link-color);
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.employee-list .employee-list-more:hover {
+    opacity: 0.9;
+}
+
+.employee-list .employee-list-error {
+    color: var(--dark-color);
+}
