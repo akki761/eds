@@ -38,7 +38,7 @@ export default async function decorate(block) {
   let employees = [];
   try {
     [placeholders, employees] = await Promise.all([
-      fetchPlaceholders(),
+      fetchPlaceholders('/docs/sheet'),
       fetchEmployees(source),
     ]);
   } catch (error) {
