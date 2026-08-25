@@ -4,15 +4,20 @@ const PAGE_SIZE = 10;
 const DEFAULT_SOURCE = '/docs/sheet/employee.json';
 
 /**
- * Fetches the sheet data rows from the given JSON url.
- * @param {string} url The sheet JSON url
- * @returns {Promise<object[]>} The array of row objects
+ * Fetches a single page of rows from the sheet using the offset/limit API.
+ * @param {string} source The sheet JSON path/url
+ * @param {number} offset The row offset to start from
+ * @param {number} limit The number of rows to fetch
+ * @returns {Promise<{data: object[], total: number}>}
  */
-async function fetchEmployees(url) {
+async function fetchPage(source, offset, limit) {
+  const url = new URL(source, window.location.origin);
+  url.searchParams.set('offset', offset);
+  url.searchParams.set('limit', limit);
   const resp = await fetch(url);
-  if (!resp.ok) throw new Error(`Could not load ${url} (${resp.status})`);
-  const { data = [] } = await resp.json();
-  return data;
+  if (!resp.ok) throw new Error(`Could not load ${url.pathname} (${resp.status})`);
+  const json = await resp.json();
+  return { data: json.data || [], total: json.total || 0 };
 }
 
 /**
@@ -20,8 +25,9 @@ async function fetchEmployees(url) {
  *
  * Authoring: an optional single cell with the path to the employee sheet
  * (as text or a link, e.g. "/docs/sheet/employee"). If omitted, the default
- * sheet is used. The "Load more" label comes from the placeholders sheet
- * (Key: loadMore), falling back to "Load more".
+ * sheet is used. Rows are paged 10 at a time via the sheet's offset/limit API,
+ * fetching the next page on each click. The "Load more" label comes from the
+ * placeholders sheet (Key: load-more), falling back to "Load more".
  *
  * @param {Element} block The employee-list block element
  */
@@ -34,12 +40,13 @@ export default async function decorate(block) {
 
   block.textContent = '';
 
+  // load placeholders + the first page in parallel
   let placeholders = {};
-  let employees = [];
+  let firstPage;
   try {
-    [placeholders, employees] = await Promise.all([
+    [placeholders, firstPage] = await Promise.all([
       fetchPlaceholders('/docs/sheet'),
-      fetchEmployees(source),
+      fetchPage(source, 0, PAGE_SIZE),
     ]);
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -51,10 +58,10 @@ export default async function decorate(block) {
     return;
   }
 
-  if (!employees.length) return;
+  if (!firstPage.data.length) return;
 
   // build the table using the sheet's own column order
-  const columns = Object.keys(employees[0]);
+  const columns = Object.keys(firstPage.data[0]);
   const table = document.createElement('table');
   const thead = document.createElement('thead');
   const headRow = document.createElement('tr');
@@ -79,10 +86,11 @@ export default async function decorate(block) {
   button.className = 'employee-list-more';
   button.textContent = placeholders.loadMore || 'Load more';
 
-  // reveal PAGE_SIZE rows per click
-  let rendered = 0;
-  const renderPage = () => {
-    employees.slice(rendered, rendered + PAGE_SIZE).forEach((emp) => {
+  const { total } = firstPage;
+  let offset = 0;
+
+  const appendRows = (rows) => {
+    rows.forEach((emp) => {
       const tr = document.createElement('tr');
       columns.forEach((col) => {
         const td = document.createElement('td');
@@ -91,11 +99,24 @@ export default async function decorate(block) {
       });
       tbody.append(tr);
     });
-    rendered = Math.min(rendered + PAGE_SIZE, employees.length);
-    if (rendered >= employees.length) button.hidden = true;
+    offset += rows.length;
+    if (!rows.length || offset >= total) button.hidden = true;
   };
 
-  button.addEventListener('click', renderPage);
+  // fetch and append the next page on demand
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    try {
+      const { data } = await fetchPage(source, offset, PAGE_SIZE);
+      appendRows(data);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Employee List: unable to load more', error);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
   block.append(button);
-  renderPage();
+  appendRows(firstPage.data);
 }
